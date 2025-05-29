@@ -16,7 +16,7 @@ double max(vector<double> v);
 vector<pair<double, double>> dimezza(const vector<pair<double, double>>& v);
 double mediap (const vector<pair<double, double>>& v);
 double stDevp (const vector<pair<double, double>>& v);
-
+\\ credo che dovro fare altre funzioni per la miglior stima di wr
 struct risonanza {
     vector <double> tempo ;
     vector <double> forzante ;
