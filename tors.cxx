@@ -52,7 +52,8 @@ vector<string> file_output
 "FF09901_out.txt","FF093619_out.txt","FF096275_out.txt","FF096413_out.txt",
 "FF096619_out.txt","FF096688_out.txt","FF096825_out.txt","FF096825_out.txt"
 };
-vector <pair <double, double> > semiampiezze;
+// tempo, ampiezza, errore
+vector <vector <double> > semiampiezze;
 
 if(ForzForzante.size() != file_input.size()) {
     cerr << "Errore: ForzForzante e file_input hanno dimensioni diverse!\n";
@@ -232,7 +233,8 @@ size_t max_size = max(picchi.size(), picchi_min.size());
 
 
 double semiampiezza = (mediap(picchi)+abs(mediap(picchi_min)))/2;
-semiampiezze.push_back({ForzForzante[i], semiampiezza});
+double errore_semiampiezza = sqrt(pow((stDevp(picchi)/sqrt(picchi.size())),2)+ pow((stDevp(picchi_min)/sqrt(picchi_min.size())),2));
+semiampiezze.push_back({ForzForzante[i], semiampiezza, errore_semiampiezza});
 fout << "La media dei picchi massimi e' : " << mediap(picchi)<< endl;
 fout << "La deviazione standard dei picchi massimi e' : " << stDevp(picchi)/sqrt(picchi.size()) << endl;
 fout << "La media dei picchi minimi e' : " << mediap(picchi_min)<< endl;
@@ -266,10 +268,13 @@ ofstream fout_sem("semiampiezze.txt");
         cout << "error output " << endl;
         return -1;
 }
-for(int i = 0 ; i< semiampiezze.size(); i++){
-    fout_sem << semiampiezze[i].first << "\t" << semiampiezze[i].second << endl;
+for (const auto& row : semiampiezze) {
+    for (size_t i = 0; i < row.size(); ++i) {
+        fout_sem << row[i];
+        if (i != row.size() - 1) fout_sem << "\t";  // Separatore tra colonne
+    }
+    fout_sem << endl;  // Nuova riga
 }
-
 return 0;
 }
 
