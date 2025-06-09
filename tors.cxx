@@ -329,14 +329,14 @@ fout << "Il periodo medio delle oscillazioni: " << media(periodi) << endl;
 fout << "Deviazione standard dei periodi: " << stDev(periodi) << endl;
 fout << "Numero di periodi analizzati: " << periodi.size() << endl;
 fout << "Errore sul periodo: " << stDev(periodi)/sqrt(periodi.size()) <<endl << endl;
-
+double errore_periodo = stDev(periodi)/sqrt(periodi.size());
 fout << "La stima di omega f e': " << 2*M_PI/media(periodi) << endl;
 fout << "Errore di omega f e': " << 2*M_PI*(stDev(periodi)/periodi.size())/(media(periodi)*media(periodi)) << endl<< endl;
 double ampiezza = media(semiamp_piccopicco);
 double errore_ampiezza = stDev(semiamp_piccopicco)/sqrt(semiamp_piccopicco.size());
 double wf= 2*M_PI/media(periodi);
 double errorewf = 2*M_PI*(stDev(periodi)/periodi.size())/(media(periodi)*media(periodi));
-semiampiezze.push_back({wf,errorewf, ampiezza, errore_ampiezza,media(periodi)});
+semiampiezze.push_back({wf,errorewf, ampiezza, errore_ampiezza,media(periodi),errore_periodo});
 fout << "tempo_max     pendolo_max     tempo_min      pendolo_min\n"<< endl;
 for (size_t i = 0; i < max_size; ++i) {
     if (i < picchi.size()) {
@@ -367,15 +367,18 @@ ofstream fout_sem("ampiezze.txt");
     if (!fout_sem){
         cout << "error output " << endl;
         return -1;
-} 
-fout_sem << "omegaf       errore wf       Ampiezza_pp     Errore     periodo\n";
-for (const auto& row : semiampiezze) {
-    for (size_t i = 0; i < row.size(); ++i) {
-        fout_sem << row[i];
-        if (i != row.size() - 1) fout_sem << "     ";
-    }
-    fout_sem << endl;
 }
+fout_sem << "omegaf_nomi     omegaf_sper     errore wf     Ampiezza_pp     Errore     periodo       errore periodo\n";
+
+for (size_t i = 0; i < semiampiezze.size(); ++i) {
+    fout_sem << ForzForzante[i]*2*M_PI << "          ";
+    for (size_t j = 0; j < semiampiezze[i].size(); ++j) {
+        fout_sem << semiampiezze[i][j];
+        if (j != semiampiezze[i].size() - 1) fout_sem << "     ";
+    }
+    fout_sem << std::endl;
+}
+
 return 0;
 }
 
