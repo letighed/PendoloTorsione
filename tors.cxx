@@ -29,39 +29,38 @@ struct risonanza {
 
 int main(){
 
-vector <double> ForzForzante = 
-{ 0.96 , 0.959 , 0.971 , 0.972 ,
- 0.6955 , 0.9419 , 0.9476 , 0.9533 ,
- 0.9562 , 0.9614 , 0.9648 , 0.9655 ,
- 0.9696 , 0.9751 , 0.9781 , 0.9841 ,
- 0.9901 , 0.93619 , 0.96275 , 0.96413 , 
- 0.96619 , 0.96688 , 0.96825 , 0.99619,
-// 09648.1, 09648.2 ,09648.3, 09648.4
+vector<double> ForzForzante = {
+    0.6955, 0.93619, 0.9419, 0.9476,
+    0.9533, 0.9562, 0.959, 0.960,
+    0.9614, 0.96275, 0.96413, 0.9648,
+    0.9655, 0.96619, 0.96688, 0.96825,
+    0.9696, 0.971, 0.972, 0.9751,
+    0.9781, 0.9841, 0.9901, 0.99619
 };
 
-vector <string> file_input =
-{"FF096.txt","FF0959.txt","FF0971.txt","FF0972.txt",
-"FF06955.txt", "FF09419.txt", "FF09476.txt", "FF09533.txt",
-"FF09562.txt", "FF09614.txt", "FF09648.txt", "FF09655.txt",
-"FF09696.txt", "FF09751.txt", "FF09781.txt", "FF09841.txt",
-"FF09901.txt","FF093619.txt","FF096275.txt","FF096413.txt",
-"FF096619.txt","FF096688.txt","FF096825.txt","FF099619.txt",
-//"1_FF09648.txt","2_FF09648.txt","3_FF09648.txt","4_FF09648.txt"
+vector<string> file_input = {
+    "FF06955.txt", "FF093619.txt", "FF09419.txt", "FF09476.txt",
+    "FF09533.txt", "FF09562.txt", "FF0959.txt", "FF096.txt",
+    "FF09614.txt", "FF096275.txt", "FF096413.txt", "FF09648.txt",
+    "FF09655.txt", "FF096619.txt", "FF096688.txt", "FF096825.txt",
+    "FF09696.txt", "FF0971.txt", "FF0972.txt", "FF09751.txt",
+    "FF09781.txt", "FF09841.txt", "FF09901.txt", "FF099619.txt"
 };
-vector<string> file_output
-{"FF096_out.txt","FF0959_out.txt","FF0971_out.txt","FF0972_out.txt",
-"FF06955_out.txt", "FF09419_out.txt", "FF09476_out.txt", "FF09533_out.txt",
-"FF09562_out.txt", "FF09614_out.txt", "FF09648_out.txt", "FF09655_out.txt",
-"FF09696_out.txt", "FF09751_out.txt", "FF09781_out.txt", "FF09841_out.txt",
-"FF09901_out.txt","FF093619_out.txt","FF096275_out.txt","FF096413_out.txt",
-"FF096619_out.txt","FF096688_out.txt","FF096825_out.txt","FF099619_out.txt",
-//"1_FF09648_out.txt","2_FF09648_out.txt","3_FF09648_out.txt","4_FF09648_out.txt"
+
+vector<string> file_output = {
+    "FF06955_out.txt", "FF093619_out.txt", "FF09419_out.txt", "FF09476_out.txt",
+    "FF09533_out.txt", "FF09562_out.txt", "FF0959_out.txt", "FF096_out.txt",
+    "FF09614_out.txt", "FF096275_out.txt", "FF096413_out.txt", "FF09648_out.txt",
+    "FF09655_out.txt", "FF096619_out.txt", "FF096688_out.txt", "FF096825_out.txt",
+    "FF09696_out.txt", "FF0971_out.txt", "FF0972_out.txt", "FF09751_out.txt",
+    "FF09781_out.txt", "FF09841_out.txt", "FF09901_out.txt", "FF099619_out.txt"
 };
+
 // tempo, ampiezza, errore
 vector <vector <double> > semiampiezze;
 // ampiezza , errore
 //vector <vector <double> > theta;
-vector <double> theta_val;
+
 
 if(ForzForzante.size() != file_input.size()) {
     cerr << "Errore: ForzForzante e file_input hanno dimensioni diverse!\n"; //quindi ho cancellato un file
@@ -107,7 +106,7 @@ if (fin >> temp >> forz >> pend >> amp >> fas) {
           // Controlla sia il valore corrente che il successivo
         if (forz != 0 && next_forz != 0) {
             file.tempo.push_back(temp);
-            file.forzante.push_back(forz*1000*2*M_PI); //forzante da millesimi di giro a radianti
+            file.forzante.push_back(forz*2*M_PI/1000); //forzante da millesimi di giro a radianti
             file.pendolo.push_back(pend*2*M_PI);
             file.ampiezza.push_back(amp);
             file.fase.push_back(fas);
@@ -129,14 +128,14 @@ double min_forz = min(file.forzante);
 // sopra il 80% pendolo
 vector <int> indici_massimi;
 for (int i = 0;  i < file.pendolo.size() ; i++ ){
-    if ( file.pendolo[i] >= 0.69*max_ass){
+    if ( file.pendolo[i] >= 0.50*max_ass){
         indici_massimi.push_back(i);
     }
 }
 // sotto il 80%
 vector <int> indici_minimi;
 for (int i = 0;  i < file.pendolo.size() ; i++ ){
-    if ( file.pendolo[i] <= 0.69*min_ass){
+    if ( file.pendolo[i] <= 0.50*min_ass){
         indici_minimi.push_back(i);
     }
 }
@@ -144,14 +143,14 @@ for (int i = 0;  i < file.pendolo.size() ; i++ ){
 // sopra il 80% forzante
 vector <int> indici_massimi_forzante;
 for (int i = 0;  i < file.forzante.size() ; i++ ){
-    if ( file.forzante[i] >= 0.69*max_forz){
+    if ( file.forzante[i] >= 0.50*max_forz){
         indici_massimi_forzante.push_back(i);
     }
 }
 // sotto il 80%
 vector <int> indici_minimi_forzante;
 for (int i = 0;  i < file.forzante.size() ; i++ ){
-    if ( file.forzante[i] <= 0.69*min_forz){
+    if ( file.forzante[i] <= 0.50*min_forz){
         indici_minimi_forzante.push_back(i);
     }
 }
@@ -307,12 +306,11 @@ size_t max_size = max(picchi.size(), picchi_min.size());
 
 vector <double> semiamp_piccopicco;
 double min_size = min(picchi.size(), picchi_min.size());
-for (int j = 0; j < min_size; ++j) {
+for (int j = 0; j < min_size; j++) {
     double diff = picchi[j].second - picchi_min[j].second;
     semiamp_piccopicco.push_back(diff/2);
 }
 
-theta_val.push_back(media(semiamp_piccopicco));
 
 
 fout << "La media dei picchi massimi e' [rad]: " << mediap(picchi)<< endl;
@@ -332,7 +330,9 @@ fout << "Errore sul periodo: " << stDev(periodi)/sqrt(periodi.size()) <<endl << 
 double errore_periodo = stDev(periodi)/sqrt(periodi.size());
 fout << "La stima di omega f e': " << 2*M_PI/media(periodi) << endl;
 fout << "Errore di omega f e': " << 2*M_PI*(stDev(periodi)/periodi.size())/(media(periodi)*media(periodi)) << endl<< endl;
+
 double ampiezza = media(semiamp_piccopicco);
+
 double errore_ampiezza = stDev(semiamp_piccopicco)/sqrt(semiamp_piccopicco.size());
 double wf= 2*M_PI/media(periodi);
 double errorewf = 2*M_PI*(stDev(periodi)/periodi.size())/(media(periodi)*media(periodi));
